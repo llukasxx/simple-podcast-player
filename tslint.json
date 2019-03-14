@@ -2,6 +2,7 @@
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "rulesDirectory": ["tslint-plugin-prettier"],
   "rules": {
-    "prettier": true
+    "prettier": true,
+    "jsx-no-lambda": false
   }
 }
