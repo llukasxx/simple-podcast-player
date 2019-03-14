@@ -5,14 +5,20 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import './index.css';
+import styled from 'styled-components/macro';
 import EpisodePlayer from './screens/EpisodePlayer';
 import EpisodesList from './screens/EpisodesList';
 import NoMatch from './screens/NoMatch';
 
+const PodcastPlayerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10vh;
+`;
+
 const PodcastPlayer = () => (
   <Router>
-    <div className="podcast-player">
+    <PodcastPlayerWrapper>
       <Switch>
         <Route
           exact={true}
@@ -23,7 +29,7 @@ const PodcastPlayer = () => (
         <Route path="/episodes/:episodeId" component={EpisodePlayer} />
         <Route component={NoMatch} />
       </Switch>
-    </div>
+    </PodcastPlayerWrapper>
   </Router>
 );
 
