@@ -1,1 +1,1 @@
-export { default } from './EpisodesList';
+export { default } from './EpisodesListContainer';

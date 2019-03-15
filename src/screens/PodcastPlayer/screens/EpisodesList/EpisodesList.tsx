@@ -1,19 +1,30 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { IEpisode } from '../../shared/ducks/episodes';
 
-const EpisodesList = () => {
+interface IProps {
+  episodes: IEpisode[];
+}
+
+const renderEpisodes = (episodes: IEpisode[]) => {
+  return episodes.map(({ id, name }) => (
+    <div key={id}>
+      <NavLink to={`/episodes/${id}`}>{name}</NavLink>
+    </div>
+  ));
+};
+
+const EpisodesList = ({ episodes }: IProps) => {
   return (
     <div>
-      <div>List of all episodes:</div>
-      <div>
-        <NavLink to="/episodes/ep1">ep1</NavLink>
-      </div>
-      <div>
-        <NavLink to="/episodes/ep2">ep2</NavLink>
-      </div>
-      <div>
-        <NavLink to="/episodes/ep3">ep3</NavLink>
-      </div>
+      {episodes.length > 0 ? (
+        <>
+          <div>List of all episodes:</div>
+          {renderEpisodes(episodes)}
+        </>
+      ) : (
+        <div>Episode list is empty</div>
+      )}
     </div>
   );
 };
