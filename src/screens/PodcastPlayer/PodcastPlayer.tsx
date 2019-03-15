@@ -6,10 +6,10 @@ import {
   Switch,
 } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import Providers from './Providers';
 import EpisodePlayer from './screens/EpisodePlayer';
 import EpisodesList from './screens/EpisodesList';
 import NoMatch from './screens/NoMatch';
+import providers from './shared/providers';
 
 const PodcastPlayerWrapper = styled.div`
   display: flex;
@@ -17,10 +17,10 @@ const PodcastPlayerWrapper = styled.div`
   margin-top: 10vh;
 `;
 
-const { Provider } = Providers();
+const { Providers } = providers();
 
 const PodcastPlayer = () => (
-  <Provider>
+  <Providers>
     <Router>
       <PodcastPlayerWrapper>
         <Switch>
@@ -35,7 +35,7 @@ const PodcastPlayer = () => (
         </Switch>
       </PodcastPlayerWrapper>
     </Router>
-  </Provider>
+  </Providers>
 );
 
 export default PodcastPlayer;
