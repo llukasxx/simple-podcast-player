@@ -1,1 +1,1 @@
-export { default } from './testUtils';
+export { render } from './testUtils';
