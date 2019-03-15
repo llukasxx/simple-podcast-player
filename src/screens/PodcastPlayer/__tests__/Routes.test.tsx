@@ -13,7 +13,3 @@ test('Routes renders NoMatch when non-matching path is provided', () => {
   });
   expect(getByText(/Route not found/)).toBeInTheDocument();
 });
-
-test.skip('I can navigate between Episodes list and episode', () => {
-  // TODO
-});

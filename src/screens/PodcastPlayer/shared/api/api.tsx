@@ -1,5 +1,13 @@
+enum Methods {
+  GET = 'GET',
+  POST = 'POST',
+  DELETE = 'DELETE',
+  PATCH = 'PATCH',
+  PUT = 'PUT',
+}
+
 interface IApiParams {
-  method: string;
+  method: Methods;
   path: string;
 }
 
@@ -17,9 +25,9 @@ export const apiCall = async ({ method, path }: IApiParams) => {
 };
 
 const api = {
-  get: (path: IApiParams['path']) =>
+  get: (path: string) =>
     apiCall({
-      method: 'GET',
+      method: Methods.GET,
       path,
     }),
 };
