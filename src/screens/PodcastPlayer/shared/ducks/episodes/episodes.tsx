@@ -21,12 +21,17 @@ export interface IEpisode {
   markers: IMarker[];
 }
 
-const episodesReducer = (state: IEpisode[] = [], action: ActionReturnTypes) => {
+export type ReducerState = IEpisode[];
+
+const episodesReducer = (
+  state: ReducerState = [],
+  action: ActionReturnTypes,
+) => {
   switch (action.type) {
     case TYPES.SET:
       return action.payload;
     case TYPES.CLEAR:
-      return action.payload;
+      return [];
     default:
       return state;
   }

@@ -1,7 +1,13 @@
 import { combineReducers, createStore } from 'redux';
-import episodes from '../ducks/episodes';
+import episodes, {
+  ReducerState as EpisodesReducerState,
+} from '../ducks/episodes';
 
-const makeStore = (initialState) => {
+export interface IStore {
+  episodes?: EpisodesReducerState;
+}
+
+const makeStore = (initialState?: IStore) => {
   const store = createStore(combineReducers({ episodes }), initialState);
   return store;
 };
