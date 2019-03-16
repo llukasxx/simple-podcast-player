@@ -5,10 +5,10 @@ import episodes, {
 } from '../ducks/episodes';
 
 export interface IStore {
-  episodes?: EpisodesReducerState;
+  episodes: EpisodesReducerState;
 }
 
-const makeStore = (initialState?: IStore) => {
+const makeStore = (initialState?: IStore | {}) => {
   const store = createStore(
     combineReducers({ episodes }),
     initialState,

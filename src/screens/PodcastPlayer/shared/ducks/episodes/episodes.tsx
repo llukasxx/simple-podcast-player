@@ -1,14 +1,14 @@
 import { ActionReturnTypes } from './actions';
 import * as TYPES from './types';
 
-enum MarkerType {
+enum Marker {
   ad = 'ad',
   image = 'image',
   text = 'text',
 }
 
 interface IMarker {
-  type: MarkerType;
+  type: Marker;
   start: number;
   duration: number;
   content: string;
