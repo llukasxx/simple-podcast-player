@@ -1,1 +1,1 @@
-export { default } from './EpisodesPlayer';
+export { default } from './EpisodePlayer';

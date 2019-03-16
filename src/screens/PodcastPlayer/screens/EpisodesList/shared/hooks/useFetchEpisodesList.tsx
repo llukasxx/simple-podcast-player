@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dispatch } from 'redux';
-import api from '../../../shared/api';
-import { actions as EPISODES_ACTIONS } from '../../../shared/ducks/episodes';
+import api from '../../../../shared/api';
+import { actions as EPISODES_ACTIONS } from '../../../../shared/ducks/episodes';
 
 const useFetchEpisodesList = (
   dispatch: Dispatch<EPISODES_ACTIONS.ActionReturnTypes>,

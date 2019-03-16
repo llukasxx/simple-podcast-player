@@ -7,7 +7,7 @@ import {
   IEpisode,
 } from '../../shared/ducks/episodes';
 import { IStore } from '../../shared/store';
-import useFetchEpisodesList from './hooks/useFetchEpisodesList';
+import useFetchEpisodesList from './shared/hooks/useFetchEpisodesList';
 
 interface IProps {
   episodes: IEpisode[];
@@ -39,7 +39,7 @@ const EpisodesList = ({ dispatch, episodes }: IProps) => {
       {renderEpisodes(episodes)}
     </div>
   ) : (
-    <div>Episode list is empty</div>
+    <div>Episodes list is empty</div>
   );
 };
 
