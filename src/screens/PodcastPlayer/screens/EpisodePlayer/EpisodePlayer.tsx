@@ -1,10 +1,17 @@
 import React from 'react';
-import { NavLink, RouteComponentProps } from 'react-router-dom';
+import { match, NavLink, RouteComponentProps } from 'react-router-dom';
+import styled from 'styled-components';
+import AudioPlayer from './components/AudioPlayer';
+import MarkerPlayer from './components/MarkerPlayer';
 import useFetchEpisode from './shared/hooks/useFetchEpisode';
 
 interface IProps extends RouteComponentProps {
-  match: RouteComponentProps<{ episodeId: string }>['match'];
+  match: match<{ episodeId: string }>;
 }
+
+const PlayerWrapper = styled.div`
+  position: relative;
+`;
 
 const EpisodePlayer = ({
   match: {
@@ -12,6 +19,7 @@ const EpisodePlayer = ({
   },
 }: IProps) => {
   const { loaded, error, episode } = useFetchEpisode(episodeId);
+  const [time, setTime] = React.useState(0);
   if (!loaded) {
     return <div>Loading...</div>;
   }
@@ -22,11 +30,12 @@ const EpisodePlayer = ({
     return <div>Episode not found</div>;
   }
   return (
-    <div className="episode-player">
+    <PlayerWrapper>
       <NavLink to="/episodes"> {'<<'} Go back to list</NavLink>
       <div>{episode.name}</div>
-      <div>{JSON.stringify(episode)}</div>
-    </div>
+      <AudioPlayer audioUrl={episode.audio} setTime={setTime} time={time} />
+      <MarkerPlayer markers={episode.markers} currentTime={time} />
+    </PlayerWrapper>
   );
 };
 
