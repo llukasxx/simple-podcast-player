@@ -36,6 +36,16 @@ test('I can navigate between list and episode', async () => {
   const { history, getByText } = render(<Routes />, { route: '/' });
   await wait();
   const ep1Link = getByText(/Episode1/);
+  // @ts-ignore
+  api.get.mockImplementation(() => ({
+    json: () =>
+      Promise.resolve({
+        audio: '/audio/ep1.mp3',
+        id: 'ep1',
+        markers: [],
+        name: 'Episode1',
+      }),
+  }));
   fireEvent.click(ep1Link);
   expect(history.location.pathname).toBe('/episodes/ep1');
   await wait();

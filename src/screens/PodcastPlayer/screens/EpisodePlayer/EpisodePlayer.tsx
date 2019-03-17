@@ -20,6 +20,10 @@ const EpisodePlayer = ({
 }: IProps) => {
   const { loaded, error, episode } = useFetchEpisode(episodeId);
   const [time, setTime] = React.useState(0);
+  const [adPlaying, setAdPlaying] = React.useState(false);
+  const [skippedAds, setSkippedAds] = React.useState(null);
+  const [resume, setResume] = React.useState(false);
+
   if (!loaded) {
     return <div>Loading...</div>;
   }
@@ -29,12 +33,30 @@ const EpisodePlayer = ({
   if (!episode) {
     return <div>Episode not found</div>;
   }
+
   return (
     <PlayerWrapper>
       <NavLink to="/episodes"> {'<<'} Go back to list</NavLink>
       <div>{episode.name}</div>
-      <AudioPlayer audioUrl={episode.audio} setTime={setTime} time={time} />
-      <MarkerPlayer markers={episode.markers} currentTime={time} />
+      <AudioPlayer
+        audioUrl={episode.audio}
+        setTime={setTime}
+        time={time}
+        adPlaying={adPlaying}
+        skippedAds={skippedAds}
+        setSkippedAds={setSkippedAds}
+        resume={resume}
+        setResume={setResume}
+        markers={episode.markers}
+      />
+      <MarkerPlayer
+        markers={episode.markers}
+        currentTime={time}
+        setAdPlaying={setAdPlaying}
+        skippedAds={skippedAds}
+        setSkippedAds={setSkippedAds}
+        setResume={setResume}
+      />
     </PlayerWrapper>
   );
 };

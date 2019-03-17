@@ -1,13 +1,29 @@
 import React, { ChangeEvent } from 'react';
-import { IEpisode } from '../../../../shared/ducks/episodes';
+import { IEpisode, IMarker } from '../../../../shared/ducks/episodes';
 
 interface IProps {
   audioUrl: IEpisode['audio'];
   setTime: (val: number) => void;
   time: number;
+  adPlaying: boolean;
+  setSkippedAds: (val: any) => void;
+  markers: IMarker[];
+  skippedAds: IMarker[] | null;
+  resume: boolean;
+  setResume: (val: boolean) => void;
 }
 
-const AudioPlayer = ({ audioUrl, setTime, time }: IProps) => {
+const AudioPlayer = ({
+  audioUrl,
+  setTime,
+  time,
+  adPlaying,
+  markers,
+  setSkippedAds,
+  skippedAds,
+  resume,
+  setResume,
+}: IProps) => {
   const fullUrl = `${process.env.REACT_APP_HOST}${audioUrl}`;
   const audio = React.useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = React.useState(false);
@@ -21,14 +37,47 @@ const AudioPlayer = ({ audioUrl, setTime, time }: IProps) => {
       current.onended = () => {
         setPlaying(false);
       };
-    }
-    return () => {
-      if (current) {
+      return () => {
         current.ontimeupdate = null;
         current.onended = null;
-      }
-    };
+      };
+    }
   }, []);
+
+  React.useEffect(() => {
+    const { current } = audio;
+    if (current) {
+      current.onseeking = (e) => {
+        const filteredSkippedAds = markers.filter((marker) => {
+          if (
+            marker.type === 'ad' &&
+            marker.start >= time &&
+            marker.start <= current.currentTime
+          ) {
+            return true;
+          }
+        });
+        if (filteredSkippedAds.length > 0) {
+          setSkippedAds(filteredSkippedAds);
+          setResume(false);
+          current.pause();
+          setPlaying(false);
+        }
+      };
+      return () => {
+        current.onseeking = null;
+      };
+    }
+  });
+
+  // resume playing when skipped ads are flushed
+  React.useEffect(() => {
+    const { current } = audio;
+    if (!skippedAds && resume && current) {
+      current.play();
+      setPlaying(true);
+    }
+  }, [skippedAds, resume]);
 
   const getProgressPerc = () => {
     const { current } = audio;
@@ -64,7 +113,6 @@ const AudioPlayer = ({ audioUrl, setTime, time }: IProps) => {
       const targetTime = Math.round(
         (parseInt(event.target.value, 10) * Math.round(current.duration)) / 100,
       );
-
       current.currentTime = targetTime;
     }
   };
@@ -72,15 +120,22 @@ const AudioPlayer = ({ audioUrl, setTime, time }: IProps) => {
   return (
     <div>
       <audio ref={audio} src={fullUrl} />
-      <button onClick={() => skipTime(-5)}>{'<<'}</button>
-      <button onClick={() => togglePlay()}>{playing ? 'pause' : 'play'}</button>
-      <button onClick={() => skipTime(5)}>{'>>'}</button>
+      <button disabled={adPlaying} onClick={() => skipTime(-5)}>
+        {'<<'}
+      </button>
+      <button disabled={!!skippedAds} onClick={() => togglePlay()}>
+        {playing ? 'pause' : 'play'}
+      </button>
+      <button disabled={adPlaying} onClick={() => skipTime(5)}>
+        {'>>'}
+      </button>
       <br />
       <input
         type="range"
         min="0"
         max="100"
         value={getProgressPerc()}
+        disabled={adPlaying}
         onChange={onSeek}
       />
     </div>
