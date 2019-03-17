@@ -3,12 +3,13 @@ import { IEpisode } from '../../../../shared/ducks/episodes';
 
 interface IProps {
   audioUrl: IEpisode['audio'];
+  setTime: (val: number) => void;
+  time: number;
 }
 
-const AudioPlayer = ({ audioUrl }: IProps) => {
+const AudioPlayer = ({ audioUrl, setTime, time }: IProps) => {
   const fullUrl = `${process.env.REACT_APP_HOST}${audioUrl}`;
   const audio = React.useRef<HTMLAudioElement>(null);
-  const [time, setTime] = React.useState(0);
   const [playing, setPlaying] = React.useState(false);
 
   React.useEffect(() => {
@@ -17,7 +18,15 @@ const AudioPlayer = ({ audioUrl }: IProps) => {
       current.ontimeupdate = () => {
         setTime(current.currentTime);
       };
+      current.onended = () => {
+        setPlaying(false);
+      };
     }
+    return () => {
+      if (current) {
+        current.ontimeupdate = null;
+      }
+    };
   }, []);
 
   const getProgressPerc = () => {

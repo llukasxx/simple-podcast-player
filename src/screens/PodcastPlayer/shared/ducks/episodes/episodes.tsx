@@ -7,11 +7,12 @@ enum Marker {
   text = 'text',
 }
 
-interface IMarker {
+export interface IMarker {
   type: Marker;
   start: number;
   duration: number;
   content: string;
+  link: string;
 }
 
 export interface IEpisode {
