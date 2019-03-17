@@ -25,6 +25,7 @@ const AudioPlayer = ({ audioUrl, setTime, time }: IProps) => {
     return () => {
       if (current) {
         current.ontimeupdate = null;
+        current.onended = null;
       }
     };
   }, []);
