@@ -12,13 +12,18 @@ const renderMarker = (currentMarker: IMarker | null) => {
   if (!currentMarker) {
     return null;
   }
-  const markerTypes = {
-    ad: <Types.Ad content={currentMarker.content} link={currentMarker.link} />,
-    image: <Types.Image content={currentMarker.content} />,
-    text: <Types.Text content={currentMarker.content} />,
-  };
-
-  return markerTypes[currentMarker.type];
+  switch (currentMarker.type) {
+    case 'ad':
+      return (
+        <Types.Ad content={currentMarker.content} link={currentMarker.link} />
+      );
+    case 'image':
+      return <Types.Image content={currentMarker.content} />;
+    case 'text':
+      return <Types.Text content={currentMarker.content} />;
+    default:
+      return <div>Unrecognized Marker</div>;
+  }
 };
 
 const getCurrentMarker = (markers: IMarker[], currentTime: number) => {
