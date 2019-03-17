@@ -1,9 +1,10 @@
 import React from 'react';
-import { NavLink, RouteComponentProps } from 'react-router-dom';
+import { match, NavLink, RouteComponentProps } from 'react-router-dom';
+import AudioPlayer from './components/AudioPlayer';
 import useFetchEpisode from './shared/hooks/useFetchEpisode';
 
 interface IProps extends RouteComponentProps {
-  match: RouteComponentProps<{ episodeId: string }>['match'];
+  match: match<{ episodeId: string }>;
 }
 
 const EpisodePlayer = ({
@@ -25,7 +26,7 @@ const EpisodePlayer = ({
     <div className="episode-player">
       <NavLink to="/episodes"> {'<<'} Go back to list</NavLink>
       <div>{episode.name}</div>
-      <div>{JSON.stringify(episode)}</div>
+      <AudioPlayer audioUrl={episode.audio} />
     </div>
   );
 };
