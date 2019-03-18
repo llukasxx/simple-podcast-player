@@ -1,8 +1,9 @@
 import React from 'react';
+import { IMarker } from '../../../../../shared/ducks/episodes';
 import Types from '../Types';
 
 interface IProps {
-  skippedAds: any;
+  skippedAds: IMarker[];
   setAdPlaying: (val: boolean) => void;
   setSkippedAds: (val: null) => void;
   setResume: (val: boolean) => void;
@@ -22,15 +23,15 @@ const SkippedAdsHandler = ({
       setResume(true);
       setAdPlaying(false);
       setSkippedAds(null);
-      return;
-    }
-    const id = setTimeout(() => {
-      setCurrentAdIndex(currentAdIndex + 1);
-    }, currentAd.duration * 1000);
+    } else {
+      const id = setTimeout(() => {
+        setCurrentAdIndex(currentAdIndex + 1);
+      }, currentAd.duration * 1000);
 
-    return () => {
-      clearTimeout(id);
-    };
+      return () => {
+        clearTimeout(id);
+      };
+    }
   }, [currentAdIndex]);
 
   if (!currentAd) {

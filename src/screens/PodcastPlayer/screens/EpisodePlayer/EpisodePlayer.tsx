@@ -1,6 +1,7 @@
 import React from 'react';
 import { match, NavLink, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
+import { IMarker } from '../../shared/ducks/episodes';
 import AudioPlayer from './components/AudioPlayer';
 import MarkerPlayer from './components/MarkerPlayer';
 import useFetchEpisode from './shared/hooks/useFetchEpisode';
@@ -21,7 +22,7 @@ const EpisodePlayer = ({
   const { loaded, error, episode } = useFetchEpisode(episodeId);
   const [time, setTime] = React.useState(0);
   const [adPlaying, setAdPlaying] = React.useState(false);
-  const [skippedAds, setSkippedAds] = React.useState(null);
+  const [skippedAds, setSkippedAds] = React.useState<IMarker[] | null>(null);
   const [resume, setResume] = React.useState(false);
 
   if (!loaded) {

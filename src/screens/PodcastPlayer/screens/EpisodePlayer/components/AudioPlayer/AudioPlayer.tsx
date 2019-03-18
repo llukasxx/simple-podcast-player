@@ -6,7 +6,7 @@ interface IProps {
   setTime: (val: number) => void;
   time: number;
   adPlaying: boolean;
-  setSkippedAds: (val: any) => void;
+  setSkippedAds: (val: IMarker[] | null) => void;
   markers: IMarker[];
   skippedAds: IMarker[] | null;
   resume: boolean;
@@ -47,7 +47,7 @@ const AudioPlayer = ({
   React.useEffect(() => {
     const { current } = audio;
     if (current) {
-      current.onseeking = (e) => {
+      current.onseeking = () => {
         const filteredSkippedAds = markers.filter((marker) => {
           if (
             marker.type === 'ad' &&
