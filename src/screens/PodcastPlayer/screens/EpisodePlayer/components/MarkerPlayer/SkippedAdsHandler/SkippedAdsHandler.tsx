@@ -22,15 +22,15 @@ const SkippedAdsHandler = ({
       setResume(true);
       setAdPlaying(false);
       setSkippedAds(null);
-      return;
-    }
-    const id = setTimeout(() => {
-      setCurrentAdIndex(currentAdIndex + 1);
-    }, currentAd.duration * 1000);
+    } else {
+      const id = setTimeout(() => {
+        setCurrentAdIndex(currentAdIndex + 1);
+      }, currentAd.duration * 1000);
 
-    return () => {
-      clearTimeout(id);
-    };
+      return () => {
+        clearTimeout(id);
+      };
+    }
   }, [currentAdIndex]);
 
   if (!currentAd) {
