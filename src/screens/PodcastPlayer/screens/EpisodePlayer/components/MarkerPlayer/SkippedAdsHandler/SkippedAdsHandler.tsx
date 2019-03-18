@@ -1,8 +1,9 @@
 import React from 'react';
+import { IMarker } from '../../../../../shared/ducks/episodes';
 import Types from '../Types';
 
 interface IProps {
-  skippedAds: any;
+  skippedAds: IMarker[];
   setAdPlaying: (val: boolean) => void;
   setSkippedAds: (val: null) => void;
   setResume: (val: boolean) => void;
