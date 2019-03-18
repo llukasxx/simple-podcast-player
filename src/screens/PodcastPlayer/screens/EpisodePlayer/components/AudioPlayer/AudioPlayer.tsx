@@ -47,7 +47,7 @@ const AudioPlayer = ({
   React.useEffect(() => {
     const { current } = audio;
     if (current) {
-      current.onseeking = (e) => {
+      current.onseeking = () => {
         const filteredSkippedAds = markers.filter((marker) => {
           if (
             marker.type === 'ad' &&
