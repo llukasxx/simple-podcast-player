@@ -6,7 +6,7 @@ interface IProps {
   setTime: (val: number) => void;
   time: number;
   adPlaying: boolean;
-  setSkippedAds: (val: any) => void;
+  setSkippedAds: (val: IMarker[] | null) => void;
   markers: IMarker[];
   skippedAds: IMarker[] | null;
   resume: boolean;
