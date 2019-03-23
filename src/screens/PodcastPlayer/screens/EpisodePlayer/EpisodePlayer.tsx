@@ -50,6 +50,7 @@ const EpisodePlayer = ({
 
   const marker = currentSkippedAd || getCurrentMarker(episode.markers, time);
   const adPlaying = !!currentSkippedAd || (!!marker && marker.type === 'ad');
+
   return (
     <PlayerWrapper>
       <NavLink to="/episodes"> {'<<'} Go back to list</NavLink>

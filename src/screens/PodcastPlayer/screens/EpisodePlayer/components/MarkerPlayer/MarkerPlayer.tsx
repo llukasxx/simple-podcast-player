@@ -7,19 +7,17 @@ interface IProps {
   marker: IMarker;
 }
 
-const renderMarker = (currentMarker: IMarker | null) => {
-  if (!currentMarker) {
+const renderMarker = (marker: IMarker | null) => {
+  if (!marker) {
     return null;
   }
-  switch (currentMarker.type) {
+  switch (marker.type) {
     case 'ad':
-      return (
-        <Types.Ad content={currentMarker.content} link={currentMarker.link} />
-      );
+      return <Types.Ad content={marker.content} link={marker.link} />;
     case 'image':
-      return <Types.Image content={currentMarker.content} />;
+      return <Types.Image content={marker.content} />;
     case 'text':
-      return <Types.Text content={currentMarker.content} />;
+      return <Types.Text content={marker.content} />;
     default:
       return <div>Unrecognized Marker</div>;
   }

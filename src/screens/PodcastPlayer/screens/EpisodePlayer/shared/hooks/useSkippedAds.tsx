@@ -1,13 +1,28 @@
 import React from 'react';
+import { IEpisode, IMarker } from '../../../../shared/ducks/episodes';
 
-const skippedAdsReducer = (state: any, action: any) => {
+interface IState {
+  ads: IMarker[] | null;
+  currentSkippedAd: null;
+  skippedAds: IMarker[];
+}
+
+interface IAction {
+  payload?: any;
+  type: string;
+}
+
+const skippedAdsReducer = (state: IState, action: IAction) => {
   switch (action.type) {
     case 'SET_ADS':
       return { ...state, ads: action.payload };
     case 'TIME_SKIP':
       const { currentTime, skippedTo } = action.payload;
+      if (!state.ads) {
+        return state;
+      }
       const skippedAds = state.ads.filter(
-        (ad: any) => ad.start >= currentTime && ad.start <= skippedTo,
+        (ad) => ad.start >= currentTime && ad.start <= skippedTo,
       );
       return { ...state, skippedAds };
     case 'SET_CURRENT_AD':
@@ -19,7 +34,7 @@ const skippedAdsReducer = (state: any, action: any) => {
   }
 };
 
-const useSkippedAds = (episode: any) => {
+const useSkippedAds = (episode: IEpisode | null) => {
   const [state, dispatch] = React.useReducer(skippedAdsReducer, {
     ads: null,
     currentSkippedAd: null,
@@ -31,9 +46,7 @@ const useSkippedAds = (episode: any) => {
   React.useEffect(() => {
     if (episode) {
       dispatch({
-        payload: episode.markers.filter(
-          (eMarker: any) => eMarker.type === 'ad',
-        ),
+        payload: episode.markers.filter((eMarker) => eMarker.type === 'ad'),
         type: 'SET_ADS',
       });
     }
