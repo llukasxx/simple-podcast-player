@@ -3,7 +3,7 @@ import { IEpisode, IMarker } from '../../../../shared/ducks/episodes';
 
 interface IState {
   ads: IMarker[] | null;
-  currentSkippedAd: null;
+  currentSkippedAd: IMarker | null;
   skippedAds: IMarker[];
 }
 
@@ -12,7 +12,7 @@ interface IAction {
   type: string;
 }
 
-const skippedAdsReducer = (state: IState, action: IAction) => {
+const skippedAdsReducer = (state: IState, action: IAction): IState => {
   switch (action.type) {
     case 'SET_ADS':
       return { ...state, ads: action.payload };
