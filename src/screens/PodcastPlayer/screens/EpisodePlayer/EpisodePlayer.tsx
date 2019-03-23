@@ -5,6 +5,7 @@ import { IMarker } from '../../shared/ducks/episodes';
 import AudioPlayer from './components/AudioPlayer';
 import MarkerPlayer from './components/MarkerPlayer';
 import useFetchEpisode from './shared/hooks/useFetchEpisode';
+import useSkippedAds from './shared/hooks/useSkippedAds';
 
 interface IProps extends RouteComponentProps {
   match: match<{ episodeId: string }>;
@@ -26,25 +27,6 @@ const getCurrentMarker = (markers: IMarker[], currentTime: number) => {
   return null;
 };
 
-const skippedAdsReducer = (state: any, action: any) => {
-  switch (action.type) {
-    case 'SET_ADS':
-      return { ...state, ads: action.payload };
-    case 'TIME_SKIP':
-      const { currentTime, skippedTo } = action.payload;
-      const skippedAds = state.ads.filter(
-        (ad: any) => ad.start >= currentTime && ad.start <= skippedTo,
-      );
-      return { ...state, skippedAds };
-    case 'SET_CURRENT_AD':
-      return { ...state, currentSkippedAd: action.payload };
-    case 'REMOVE_CURRENT_AD':
-      return { ...state, skippedAds: state.skippedAds.slice(1) };
-    default:
-      return state;
-  }
-};
-
 const EpisodePlayer = ({
   match: {
     params: { episodeId },
@@ -52,45 +34,9 @@ const EpisodePlayer = ({
 }: IProps) => {
   const { loaded, error, episode } = useFetchEpisode(episodeId);
   const [time, setTime] = React.useState(0);
-
-  const [skippedAdsState, skippedAdsDispatch] = React.useReducer(
-    skippedAdsReducer,
-    {
-      ads: null,
-      currentSkippedAd: null,
-      skippedAds: [],
-    },
+  const { currentSkippedAd, dispatch: skippedAdsDispatch } = useSkippedAds(
+    episode,
   );
-
-  const { currentSkippedAd, skippedAds } = skippedAdsState;
-
-  React.useEffect(() => {
-    if (episode) {
-      skippedAdsDispatch({
-        payload: episode.markers.filter((eMarker) => eMarker.type === 'ad'),
-        type: 'SET_ADS',
-      });
-    }
-  }, [episode]);
-
-  React.useEffect(() => {
-    const skippedAdsPresent = skippedAds.length > 0;
-    skippedAdsDispatch({
-      payload: skippedAdsPresent ? skippedAds[0] : null,
-      type: 'SET_CURRENT_AD',
-    });
-  }, [skippedAds]);
-
-  React.useEffect(() => {
-    if (currentSkippedAd) {
-      const id = setTimeout(() => {
-        skippedAdsDispatch({ type: 'REMOVE_CURRENT_AD' });
-      }, currentSkippedAd.duration * 1000);
-      return () => {
-        clearTimeout(id);
-      };
-    }
-  }, [currentSkippedAd]);
 
   if (!loaded) {
     return <div>Loading...</div>;
