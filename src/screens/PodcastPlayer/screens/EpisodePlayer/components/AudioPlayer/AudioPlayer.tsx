@@ -6,11 +6,8 @@ interface IProps {
   setTime: (val: number) => void;
   time: number;
   adPlaying: boolean;
-  setSkippedAds: (val: IMarker[] | null) => void;
-  markers: IMarker[];
-  skippedAds: IMarker[] | null;
-  resume: boolean;
-  setResume: (val: boolean) => void;
+  onTimeSkip: (currentTime: number, skippedTo: number) => void;
+  playDisabled: boolean;
 }
 
 const AudioPlayer = ({
@@ -18,15 +15,13 @@ const AudioPlayer = ({
   setTime,
   time,
   adPlaying,
-  markers,
-  setSkippedAds,
-  skippedAds,
-  resume,
-  setResume,
+  onTimeSkip,
+  playDisabled,
 }: IProps) => {
   const fullUrl = `${process.env.REACT_APP_HOST}${audioUrl}`;
   const audio = React.useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = React.useState(false);
+  const [resume, setResume] = React.useState(false);
 
   React.useEffect(() => {
     const { current } = audio;
@@ -48,36 +43,28 @@ const AudioPlayer = ({
     const { current } = audio;
     if (current) {
       current.onseeking = () => {
-        const filteredSkippedAds = markers.filter((marker) => {
-          if (
-            marker.type === 'ad' &&
-            marker.start >= time &&
-            marker.start <= current.currentTime
-          ) {
-            return true;
-          }
-        });
-        if (filteredSkippedAds.length > 0) {
-          setSkippedAds(filteredSkippedAds);
-          setResume(false);
-          current.pause();
-          setPlaying(false);
-        }
+        onTimeSkip(time, current.currentTime);
       };
       return () => {
         current.onseeking = null;
       };
     }
-  });
+  }, [time]);
 
   // resume playing when skipped ads are flushed
   React.useEffect(() => {
     const { current } = audio;
-    if (!skippedAds && resume && current) {
-      current.play();
-      setPlaying(true);
+    if (current) {
+      if (playDisabled) {
+        playing ? setResume(true) : setResume(false);
+        current.pause();
+        setPlaying(false);
+      } else if (resume) {
+        current.play();
+        setPlaying(true);
+      }
     }
-  }, [skippedAds, resume]);
+  }, [playDisabled]);
 
   const getProgressPerc = () => {
     const { current } = audio;
@@ -123,7 +110,7 @@ const AudioPlayer = ({
       <button disabled={adPlaying} onClick={() => skipTime(-5)}>
         {'<<'}
       </button>
-      <button disabled={!!skippedAds} onClick={() => togglePlay()}>
+      <button disabled={playDisabled} onClick={() => togglePlay()}>
         {playing ? 'pause' : 'play'}
       </button>
       <button disabled={adPlaying} onClick={() => skipTime(5)}>
